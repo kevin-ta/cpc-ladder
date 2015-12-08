@@ -1,0 +1,3 @@
+cpc_ranking_homepage:
+    path:     /{id}/classement/
+    defaults: { _controller: CPCRankingBundle:Default:classement }

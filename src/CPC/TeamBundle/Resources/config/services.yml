@@ -1,0 +1,4 @@
+services:
+#    cpc_team.example:
+#        class: CPC\TeamBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

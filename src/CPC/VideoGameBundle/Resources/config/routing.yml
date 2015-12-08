@@ -1,0 +1,7 @@
+cpc_video_game_homepage:
+    path:     /
+    defaults: { _controller: CPCVideoGameBundle:Default:homepage }
+
+cpc_video_game_index:
+    path:     /{id}/index/
+    defaults: { _controller: CPCVideoGameBundle:Default:index }

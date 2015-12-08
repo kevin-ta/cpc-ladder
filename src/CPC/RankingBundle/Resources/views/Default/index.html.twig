@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="col-md-12">
+		<div class="text-center">
+			<h2>{{ game.name }}</h2></br>
+		</div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>
+						#
+					</th>
+					{% if game.isSolo == '0' %}
+						<th>
+							Nom de l'équipe
+						</th>
+						<th>
+							Liste des joueurs
+						</th>
+					{% else %}
+						<th>
+							Joueur
+						</th>
+					{% endif %}
+					<th>
+						Elo
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% set rank = '1' %}
+				{% for i in ranking %}
+					<tr>
+						<th>{{ rank }}</th>
+						<td>{{ i.name }}</td>
+						{% if game.isSolo == '0' %}
+							<td>
+								{% for player in i.players %}
+									{{ player.nickname }}
+									{% if not loop.last %}
+										,
+									{% endif %}
+								{% endfor %}
+							</td>
+						{% endif %}
+						<td>{{ i.currentScore }}</td>
+					{% set rank = rank + 1 %}
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
+
+{% block ranking %}
+	"{{ path('cpc_ranking_homepage', {id:game.id}) }}"
+{% endblock %}
+
+{% block game %}
+	"{{ path('cpc_game_homepage', {id:game.id}) }}"
+{% endblock %}
+

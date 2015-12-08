@@ -1,0 +1,4 @@
+services:
+#    cpc_player.example:
+#        class: CPC\PlayerBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

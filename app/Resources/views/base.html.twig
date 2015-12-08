@@ -1,13 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>CPC Ladder{% block title %}{% endblock %}</title>
+        <link href="{{ asset('//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css') }}" rel="stylesheet" >
+        {% block stylesheets %}
+        {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        {% block navbar %}
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">CPC Ladder</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li><a href={% block ranking %}{% endblock %}><i class="fa fa-trophy"></i> Classement</a></li>
+                            <li><a href={% block game %}{% endblock %}><i class="fa fa-plus"></i> Nouveau match</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> Mon profil <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    {% if app.user is null %}
+                                        <li><a href="{{ path('fos_user_registration_register') }}"> Inscription</a></li>
+                                        <li><a href="{{ path('fos_user_security_login') }}">Connexion</a></li>
+                                    {% else %}
+                                        <li><a href="#">Mon profil joueur</a></li>
+                                        <li role="separator" class="divider"></li>
+                                        <li><a href="{{ path('fos_user_security_logout') }}">Deconnexion</a></li>
+                                    {% endif %}
+                                </ul>
+                              </li>
+                            <li><a href="#"><i class="fa fa-undo"></i> Liste des jeux</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        {% endblock %}
+        <div class="container">
+            <div class="row">
+                {% block body %}
+                {% endblock %}
+            </div>
+        </div>
+        <script src="{{ asset('//code.jquery.com/jquery-2.1.4.min.js') }}"></script>
+        <script src="{{ asset('//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js') }}"></script>
+        {% block javascripts %}
+        {% endblock %}
     </body>
 </html>

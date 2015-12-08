@@ -1,0 +1,46 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}- Nouveau match{% endblock %}
+
+{% block body %}
+    <div class="col-md-12">
+        <h4>Ajouter un nouveau match</h4><br>
+        <form method="post" class="form-horizontal">
+            <div class="col-md-12">
+                <div class="form-group">
+                    {{ form_label(form.team1, label|default(null), {'label_attr': {'class':'col-md-2 col-md-offset-2 control-label'}}) }}
+                    <div class="col-md-4">
+                        {{ form_widget(form.team1, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-md-2">
+                        <input type="checkbox" class="winning" name="0" value="0"/> Gagnant
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.team2, label|default(null), {'label_attr': {'class':'col-md-2 col-md-offset-2 control-label'}}) }}
+                    <div class="col-md-4">
+                        {{ form_widget(form.team2, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-md-2">
+                        <input type="checkbox" class="winning" name="1" value="1"/> Gagnant
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12"><br>
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+            </div>
+        </form>
+    </div>
+{% endblock body %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/checkbox.js') }}"></script>
+{% endblock %}
+
+{% block ranking %}
+    "{{ path('cpc_ranking_homepage', {id:videogame.id}) }}"
+{% endblock %}
+
+{% block game %}
+    "{{ path('cpc_game_homepage', {id:videogame.id}) }}"
+{% endblock %}

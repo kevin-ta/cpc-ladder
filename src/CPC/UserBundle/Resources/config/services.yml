@@ -1,0 +1,4 @@
+services:
+#    cpc_user.example:
+#        class: CPC\UserBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

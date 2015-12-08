@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block navbar %}{% endblock %}
+
+{% block body %}
+	<div class="col-md-12">
+		{% for videogame in videogames %}
+			<!--<a href="path('cpc_video_game_index', {id:videogame.id}))"><img class="responsive" src="{{asset(videogame.banner) }}"></a>-->
+			{{ videogame.name }}<br>
+		{% endfor %}
+	</div>
+{% endblock %}

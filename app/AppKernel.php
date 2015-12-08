@@ -16,6 +16,13 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new AppBundle\AppBundle(),
+            new CPC\UserBundle\CPCUserBundle(),
+            new FOS\UserBundle\FOSUserBundle(),
+            new CPC\TeamBundle\CPCTeamBundle(),
+            new CPC\VideoGameBundle\CPCVideoGameBundle(),
+            new CPC\GameBundle\CPCGameBundle(),
+            new CPC\RankingBundle\CPCRankingBundle(),
+            new CPC\PlayerBundle\CPCPlayerBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

@@ -1,0 +1,4 @@
+services:
+#    cpc_video_game.example:
+#        class: CPC\VideoGameBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
