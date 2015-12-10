@@ -3,14 +3,28 @@
 {% block title %}- Nouveau match{% endblock %}
 
 {% block body %}
+    <div class="col-md-12 text-center">
+        {% if error is defined %}
+            <div class="alert alert-dismissible alert-danger">
+                <button type="button" class="close" data-dismiss="alert"><i class="fa fa-times"></i></button>
+                {{ error }}
+            </div>
+        {% endif %}
+        {% if success is defined %}
+            <div class="alert alert-dismissible alert-success">
+                <button type="button" class="close" data-dismiss="alert"><i class="fa fa-times"></i></button>
+                {{ success }}
+            </div>
+        {% endif %}
+    </div>
     <div class="col-md-12">
         <h4>Ajouter un nouveau match</h4><br>
         <form method="post" class="form-horizontal">
             <div class="col-md-12">
                 <div class="form-group">
-                    {{ form_label(form.team1, label|default(null), {'label_attr': {'class':'col-md-2 col-md-offset-2 control-label'}}) }}
+                    <label class="col-md-2 col-md-offset-2 control-label required" for="game_team1">Equipe 1</label>
                     <div class="col-md-4">
-                        {{ form_widget(form.team1, {'attr': {'class': 'form-control'}}) }}
+                        <input type="text" name="game_team1" class="form-control" value="{{ team1.name }}"disabled><br>
                     </div>
                     <div class="col-md-2">
                         <input type="checkbox" class="winning" name="0" value="0"/> Gagnant
@@ -26,8 +40,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12"><br>
-                <button type="submit" class="btn btn-primary">Envoyer</button>
+            <div class="col-md-6 col-md-offset-3"><br>
+                <button type="submit" class="btn btn-primary" disabled>Envoyer</button>
             </div>
         </form>
     </div>
@@ -35,12 +49,4 @@
 
 {% block javascripts %}
     <script src="{{ asset('js/checkbox.js') }}"></script>
-{% endblock %}
-
-{% block ranking %}
-    "{{ path('cpc_ranking_homepage', {id:videogame.id}) }}"
-{% endblock %}
-
-{% block game %}
-    "{{ path('cpc_game_homepage', {id:videogame.id}) }}"
 {% endblock %}

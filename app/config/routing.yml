@@ -10,5 +10,9 @@ cpc_game:
     resource: "@CPCGameBundle/Resources/config/routing.yml"
     prefix:   /
 
+cpc_player:
+    resource: "@CPCPlayerBundle/Resources/config/routing.yml"
+    prefix:   /
+
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"

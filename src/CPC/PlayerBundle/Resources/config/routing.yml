@@ -1,3 +1,3 @@
 cpc_player_homepage:
-    path:     /
-    defaults: { _controller: CPCPlayerBundle:Default:index }
+    path:     /{id}/profile
+    defaults: { _controller: CPCPlayerBundle:Default:profile }

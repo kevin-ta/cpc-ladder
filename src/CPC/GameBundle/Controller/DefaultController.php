@@ -18,7 +18,13 @@ class DefaultController extends Controller
         $ranking1 = new Ranking();
         $ranking2 = new Ranking();
         $videogame = $em->getRepository('CPCVideoGameBundle:VideoGame')->findOneById($id);
-        $form = $this->createForm(new GameType($videogame), $game);
+        $user = $this->get('security.context')->getToken()->getUser();
+        $team1 = $em->getRepository('CPCPlayerBundle:Player')->findOneBy(array(
+            'user' => $user->getId(),
+            'videogame' => $id
+        ))->getTeam();
+
+        $form = $this->createForm(new GameType($videogame, $team1->getName()), $game);
 
         if($request->isMethod('POST'))
         {            
@@ -26,8 +32,11 @@ class DefaultController extends Controller
 
             if(! $form->isValid())
             {
-                return $this->render('CPCGameBundle:Default:success.html.twig', array(
-                    'error' => $form->getErrorsAsString()
+                return $this->render('CPCGameBundle:Default:index.html.twig', array(
+                    'error' => $form->getErrorsAsString(),
+                    'videogame' => $videogame,
+                    'team1' => $team1,
+                    'form' => $form->createView(),
                 ));
             }
 
@@ -36,6 +45,7 @@ class DefaultController extends Controller
 
             date_default_timezone_set('Europe/Paris');
             $game->setDate(new \DateTime("now"));
+            $game->setTeam1($team1);
 
             $team1 = $game->getTeam1();
             $team2 = $game->getTeam2();
@@ -65,12 +75,16 @@ class DefaultController extends Controller
             $em->persist($team2);
             $em->flush();
 
-            return $this->render('CPCGameBundle:Default:success.html.twig', array(
-                    'success' => 'Ok, bien reçu.'
+            return $this->render('CPCGameBundle:Default:index.html.twig', array(
+                    'videogame' => $videogame,
+                    'team1' => $team1,
+                    'form' => $form->createView(),
+                    'success' => 'Le match a bien été rentré, allez consulter votre classement.'
                 ));
         }
 
         return $this->render('CPCGameBundle:Default:index.html.twig', array(
+            'team1' => $team1,
             'videogame' => $videogame,
             'form' => $form->createView(),
         ));

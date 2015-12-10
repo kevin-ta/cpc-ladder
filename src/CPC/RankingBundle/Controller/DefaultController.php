@@ -10,10 +10,10 @@ class DefaultController extends Controller
     {
     	$em = $this->getDoctrine()->getManager();
     	$ranking = $em->getRepository('CPCTeamBundle:Team')->findOrdered($id);
-    	$game = $em->getRepository('CPCVideoGameBundle:VideoGame')->findOneById($id);
+    	$videogame = $em->getRepository('CPCVideoGameBundle:VideoGame')->findOneById($id);
 
         return $this->render('CPCRankingBundle:Default:index.html.twig', array(
-        	'game' => $game,
+        	'videogame' => $videogame,
         	'ranking' => $ranking
         ));
     }

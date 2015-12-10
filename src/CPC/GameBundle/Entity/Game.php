@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CPC\GameBundle\Repository\GameRepository")
  * @ORM\Table(name="game")
  */
 class Game
@@ -38,6 +39,11 @@ class Game
      * @ORM\JoinColumn(nullable=false, name="team2")
      */
     private $team2;
+
+    /**
+     * @ORM\Column(nullable=true, type="boolean")
+     */
+    private $isValid;
 
     /**
      * Get id
@@ -154,6 +160,7 @@ class Game
 
         return $team2;
     }
+
     public function getLoser()
     {
         if ($winningTeam === 1)
@@ -162,5 +169,29 @@ class Game
         }
 
         return $team1;
+    }
+
+    /**
+     * Set isValid
+     *
+     * @param boolean $isValid
+     *
+     * @return Game
+     */
+    public function setIsValid($isValid)
+    {
+        $this->isValid = $isValid;
+
+        return $this;
+    }
+
+    /**
+     * Get isValid
+     *
+     * @return boolean
+     */
+    public function getIsValid()
+    {
+        return $this->isValid;
     }
 }

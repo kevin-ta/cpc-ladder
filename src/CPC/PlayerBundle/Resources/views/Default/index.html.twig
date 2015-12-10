@@ -1,1 +1,83 @@
-Hello World!
+{% extends '::base.html.twig' %}
+
+{% block body %}
+	<div class="col-md-12 text-center">
+	    {% if error is defined %}
+	    	<div class="alert alert-dismissible alert-danger">
+				<button type="button" class="close" data-dismiss="alert"><i class="fa fa-times"></i></button>
+				{{ error }}
+			</div>
+	    {% endif %}
+	    {% if success is defined %}
+	        <div class="alert alert-dismissible alert-success">
+				<button type="button" class="close" data-dismiss="alert"><i class="fa fa-times"></i></button>
+				{{ success }}
+			</div>
+	    {% endif %}
+	</div>
+	<div class="col-md-12">
+		<h1>Mon profil joueur</h1><br><br>
+		<h3>Pseudo In-Game : {{ player.nickname }}</h3>
+		<h3>Equipe : {{ player.team.name }}</h3>
+		<h3>Elo actuel : {{ player.team.currentscore }} points</h3><br><br>
+		<h2>Historique de partie :</h2><br><br>
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr class="active">
+						<th class="hidden-xs">Date</th>
+						<th>Adversaire</th>
+						<th>Score</th>
+						<th>± Elo</th>
+						<th colspan="2">Statut</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for i in games %}
+						{% if i.winningteam == 1 and player.team.id == i.team2.id %}
+							<tr class="success">
+						{% elseif i.winningteam == 0 and player.team.id == i.team1.id %}
+							<tr class="success">
+						{% else %}
+							<tr class="danger">
+						{% endif %}
+							<td class="hidden-xs">{{ i.date|date("d/m/Y") }}</td>
+							{% if player.team.name == i.team2.name %}
+								<td>{{ i.team1.name }}</td>
+							{% else %}
+								<td>{{ i.team2.name }}</td>
+							{% endif %}
+							{% if i.winningteam == 1 and player.team.id == i.team2.id %}
+								<td>Victoire</td>
+							{% elseif i.winningteam == 0 and player.team.id == i.team1.id %}
+								<td>Victoire</td>
+							{% else %}
+								<td>Défaite</td>
+							{% endif %}
+							{% for rank in ranking %}
+								{% if rank.game.id == i.id and rank.team.id == player.team.id %}
+									{% if rank.scoreevolution > 0 %}
+										<td>+{{ rank.scoreevolution }}</td>
+									{% else %}
+										<td>{{ rank.scoreevolution }}</td>
+									{% endif %}
+								{% endif %}
+							{% endfor %}
+							{% if i.isvalid == 1 %}
+								<td colspan="2"><i class="fa fa-check-square-o fa-lg"></i> OK</td>
+							{% else %}
+								{% if player.team.id == i.team2.id %}
+									<td><a href="#"><i class="fa fa-check fa-lg"></i></a></td>
+									<td><a href="#"><i class="fa fa-times fa-lg"></i></a></td>
+								{% elseif player.team.id == i.team1.id%}
+									<td><i class="fa fa-hourglass-half fa-lg"></i></td>
+									<td><a href="#"><i class="fa fa-times fa-lg" ></i></a></td>
+								{% endif %}
+							{% endif %}
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+{% endblock %}

@@ -3,7 +3,7 @@
 {% block body %}
 	<div class="col-md-12">
 		<div class="text-center">
-			<h2>{{ game.name }}</h2></br>
+			<h2>{{ videogame.name }}</h2></br>
 		</div>
 		<table class="table">
 			<thead>
@@ -11,7 +11,7 @@
 					<th>
 						#
 					</th>
-					{% if game.isSolo == '0' %}
+					{% if videogame.isSolo == '0' %}
 						<th>
 							Nom de l'équipe
 						</th>
@@ -34,7 +34,7 @@
 					<tr>
 						<th>{{ rank }}</th>
 						<td>{{ i.name }}</td>
-						{% if game.isSolo == '0' %}
+						{% if videogame.isSolo == '0' %}
 							<td>
 								{% for player in i.players %}
 									{{ player.nickname }}
@@ -52,12 +52,3 @@
 		</table>
 	</div>
 {% endblock %}
-
-{% block ranking %}
-	"{{ path('cpc_ranking_homepage', {id:game.id}) }}"
-{% endblock %}
-
-{% block game %}
-	"{{ path('cpc_game_homepage', {id:game.id}) }}"
-{% endblock %}
-

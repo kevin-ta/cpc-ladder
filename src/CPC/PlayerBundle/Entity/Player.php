@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="CPC\PlayerBundle\Repository\PlayerRepository")
  * @ORM\Table(name="player")
  */
 class Player
@@ -25,7 +24,7 @@ class Player
 
     /**
      * @ORM\ManyToOne(targetEntity="CPC\TeamBundle\Entity\Team", inversedBy="players")
-     * @ORM\JoinColumn(nullable=false, name="team")
+     * @ORM\JoinColumn(name="team")
      */
     protected $team;
 
@@ -34,6 +33,12 @@ class Player
      * @ORM\JoinColumn(nullable=false, name="user")
      */
     protected $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="CPC\VideoGameBundle\Entity\VideoGame")
+     * @ORM\JoinColumn(nullable=false, name="videogame")
+     */
+    protected $videogame;
 
     /**
      * Get id
@@ -115,5 +120,29 @@ class Player
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set videogame
+     *
+     * @param \CPC\VideoGameBundle\Entity\VideoGame $videogame
+     *
+     * @return Player
+     */
+    public function setVideogame(\CPC\VideoGameBundle\Entity\VideoGame $videogame)
+    {
+        $this->videogame = $videogame;
+
+        return $this;
+    }
+
+    /**
+     * Get videogame
+     *
+     * @return \CPC\VideoGameBundle\Entity\VideoGame
+     */
+    public function getVideogame()
+    {
+        return $this->videogame;
     }
 }

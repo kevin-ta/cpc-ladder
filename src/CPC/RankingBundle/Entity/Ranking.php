@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CPC\RankingBundle\Repository\RankingRepository")
  * @ORM\Table(name="ranking")
  */
 class Ranking

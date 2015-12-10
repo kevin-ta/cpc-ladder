@@ -4,6 +4,7 @@ $('input.winning').on('change', function() {
 
 var checkboxes = $("input[type='checkbox']"),
     submitButt = $("button[type='submit']");
+    team1 = $("button[type='submit']");
 
 checkboxes.click(function() {
     submitButt.attr("disabled", !checkboxes.is(":checked"));
