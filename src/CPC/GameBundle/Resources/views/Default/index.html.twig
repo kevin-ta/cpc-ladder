@@ -18,7 +18,9 @@
         {% endif %}
     </div>
     <div class="col-md-12">
-        <h4>Ajouter un nouveau match</h4><br>
+        <div class="col-md-12 col-md-offset-2">
+            <h3>Ajouter un nouveau match</h3><br><br>
+        </div>
         <form method="post" class="form-horizontal">
             <div class="col-md-12">
                 <div class="form-group">
@@ -44,7 +46,16 @@
                 <button type="submit" class="btn btn-primary" disabled>Envoyer</button>
             </div>
         </form>
+        <div class="col-md-12 col-md-offset-2"><br><br><br>
+            <p>
+                <u><h4>Attention :</h4></u>
+                Les matchs nuls ne sont pas autorisés, prévoyez un overtime. Il sera d'ailleurs impossible de l'ajouter sur le formulaire.<br>
+                Tout match envoyé doit être validé par l'adversaire via son panel joueur, aucun changement sur le Elo ne sera effectué avant.<br>
+                Si des matchs antérieurs non validés subsistent encore, il sera impossible d'en valider des nouveaux (Elo actuel fluctuant).
+            </p>
+        </div>
     </div>
+    
 {% endblock body %}
 
 {% block javascripts %}

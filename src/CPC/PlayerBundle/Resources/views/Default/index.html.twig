@@ -16,11 +16,31 @@
 	    {% endif %}
 	</div>
 	<div class="col-md-12">
-		<h1>Mon profil joueur</h1><br><br>
-		<h3>Pseudo In-Game : {{ player.nickname }}</h3>
-		<h3>Equipe : {{ player.team.name }}</h3>
-		<h3>Elo actuel : {{ player.team.currentscore }} points</h3><br><br>
-		<h2>Historique de partie :</h2><br><br>
+		<h3>Mon profil joueur</h3><br><br>
+		<div class="col-md-6">
+			<h4>Pseudo In-Game : {{ player.nickname }}</h4>
+			<h4>Equipe : {{ player.team.name }}</h4>
+		</div>
+		<div class="col-md-6">
+			<h4>Elo actuel : {{ player.team.currentscore }} point{% if player.team.currentscore > 1 %}s{% endif %}</h4>
+			<h4>Stats :
+				{% set win = 0 %}
+				{% set lose = 0 %}
+				{% for i in games %}
+					{% if i.winningteam == 1 and player.team.id == i.team2.id and i.isValid == 1 %}
+						{% set win = win + 1 %}
+					{% elseif i.winningteam == 0 and player.team.id == i.team1.id and i.isValid == 1 %}
+						{% set win = win + 1 %}
+					{% else %}
+						{% set lose = lose + 1 %}
+					{% endif %}
+				{% endfor %}
+				{{ win }} victoire{% if win > 1 %}s{% endif %} et {{ lose }} défaite{% if lose > 1 %}s{% endif %}
+			</h4>
+			<h4>Ratio W/L : {{ (win/lose)|round(2, 'common') }}</h4>
+			<br><br>
+		</div>
+		<h3>Historique de partie :</h3><br><br>
 		<div class="table-responsive">
 			<table class="table">
 				<thead>
@@ -54,20 +74,26 @@
 							{% else %}
 								<td>Défaite</td>
 							{% endif %}
+							{% set elo = null %}
 							{% for rank in ranking %}
 								{% if rank.game.id == i.id and rank.team.id == player.team.id %}
 									{% if rank.scoreevolution > 0 %}
 										<td>+{{ rank.scoreevolution }}</td>
+										{% set elo = 1 %}
 									{% else %}
 										<td>{{ rank.scoreevolution }}</td>
+										{% set elo = 1 %}
 									{% endif %}
 								{% endif %}
 							{% endfor %}
+							{% if elo is null %}
+								<td>N.A.</td>
+							{% endif %}
 							{% if i.isvalid == 1 %}
 								<td colspan="2"><i class="fa fa-check-square-o fa-lg"></i> OK</td>
 							{% else %}
 								{% if player.team.id == i.team2.id %}
-									<td><a href="#"><i class="fa fa-check fa-lg"></i></a></td>
+									<td><a href="{{ path('cpc_player_valid', { id:videogame.id, game:i.id}) }}"><i class="fa fa-check fa-lg"></i></a></td>
 									<td><a href="#"><i class="fa fa-times fa-lg"></i></a></td>
 								{% elseif player.team.id == i.team1.id%}
 									<td><i class="fa fa-hourglass-half fa-lg"></i></td>

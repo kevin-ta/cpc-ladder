@@ -1,3 +1,7 @@
 cpc_player_homepage:
-    path:     /{id}/profile
+    path:     /{id}/profile/
     defaults: { _controller: CPCPlayerBundle:Default:profile }
+
+cpc_player_valid:
+    path:     /{id}/profile/valid/{game}/
+    defaults: { _controller: CPCPlayerBundle:Default:valid }
