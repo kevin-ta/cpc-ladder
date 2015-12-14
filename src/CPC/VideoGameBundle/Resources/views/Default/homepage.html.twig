@@ -9,7 +9,7 @@
 	</video>
 	<div class="col-md-12">
 		{% for videogame in videogames %}
-			<a href="{{ path('cpc_video_game_index', {id:videogame.id})) }}">{{ videogame.name }}</a><br>
+			<a href="{{ path('cpc_video_game_index', {id:videogame.id}) }}">{{ videogame.name }}</a><br>
 		{% endfor %}
 	</div>
 {% endblock %}
