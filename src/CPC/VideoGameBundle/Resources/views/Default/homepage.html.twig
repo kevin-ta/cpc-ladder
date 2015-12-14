@@ -3,9 +3,9 @@
 {% block navbar %}{% endblock %}
 
 {% block body %}
-	<video autoplay loop poster="polina.jpg" id="bgvid">
-    	<source src="polina.webm" type="video/webm">
-    	<source src="polina.mp4" type="video/mp4">
+	<video autoplay loop poster="{{ asset('vid/clubpc.jpg') }}" id="bgvid">
+		<source src="{{ asset('vid/clubpc.mp4') }}" type="video/mp4">
+    	<source src="{{ asset('vid/clubpc.webm') }}" type="video/webm">
 	</video>
 	<div class="col-md-12">
 		{% for videogame in videogames %}
