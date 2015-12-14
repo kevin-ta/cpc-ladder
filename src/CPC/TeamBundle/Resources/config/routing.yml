@@ -1,3 +1,19 @@
 cpc_team_homepage:
-    path:     /{id}/team/
-    defaults: { _controller: CPCTeamBundle:Default:index }
+    path:     /{id}/team/{teamid}
+    defaults: { _controller: CPCTeamBundle:Default:index, teamid : null }
+
+cpc_team_createplayer:
+    path:     /{id}/team/create-player/
+    defaults: { _controller: CPCTeamBundle:Default:player }
+
+cpc_team_createteam:
+    path:     /{id}/team/create-team/
+    defaults: { _controller: CPCTeamBundle:Default:team }
+
+cpc_team_valid:
+    path:     /{id}/team/valid/{game}/
+    defaults: { _controller: CPCTeamBundle:Default:valid }
+
+cpc_team_delete:
+    path:     /{id}/team/delete/{game}/
+    defaults: { _controller: CPCTeamBundle:Default:delete }

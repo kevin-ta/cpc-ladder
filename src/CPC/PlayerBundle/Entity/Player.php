@@ -23,7 +23,7 @@ class Player
     protected $nickname;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CPC\TeamBundle\Entity\Team", inversedBy="players")
+     * @ORM\ManyToOne(targetEntity="CPC\TeamBundle\Entity\Team", inversedBy="players", cascade={"persist"})
      * @ORM\JoinColumn(name="team")
      */
     protected $team;

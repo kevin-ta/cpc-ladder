@@ -40,7 +40,6 @@
                                         <li><a href="{{ path('fos_user_security_login') }}">Connexion</a></li>
                                     {% else %}
                                         <li><a href="{{ path('fos_user_profile_show', {id:videogame.id}) }}">Mon profil utilisateur</a></li>
-                                        <li><a href="{{ path('cpc_player_homepage', {id:videogame.id}) }}">Mon profil joueur</a></li>
                                         <li role="separator" class="divider"></li>
                                         <li><a href="{{ path('fos_user_security_logout') }}">Deconnexion</a></li>
                                     {% endif %}

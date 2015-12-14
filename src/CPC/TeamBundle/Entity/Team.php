@@ -163,4 +163,9 @@ class Team
     {
         return $this->videogame;
     }
+
+    public function __toString()
+    {
+        return $this->getName();
+    }
 }

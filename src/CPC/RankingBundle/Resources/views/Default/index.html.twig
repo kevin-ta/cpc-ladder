@@ -33,7 +33,7 @@
 				{% for i in ranking %}
 					<tr>
 						<th>{{ rank }}</th>
-						<td>{{ i.name }}</td>
+						<td><a href="{{ path('cpc_team_homepage', {id:videogame.id, teamid:i.id}) }}">{{ i.name }}</a></td>
 						{% if videogame.isSolo == '0' %}
 							<td>
 								{% for player in i.players %}

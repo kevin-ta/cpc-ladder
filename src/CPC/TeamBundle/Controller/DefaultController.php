@@ -6,113 +6,345 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use CPC\PlayerBundle\Form\PlayerType;
 use CPC\TeamBundle\Form\TeamType;
+use CPC\TeamBundle\Form\TeamExistType;
 use CPC\PlayerBundle\Entity\Player;
 use CPC\TeamBundle\Entity\Team;
+use CPC\RankingBundle\Entity\Ranking;
 
 class DefaultController extends Controller
 {
-    public function indexAction(Request $request, $id)
+	public function indexAction($id, $teamid)
     {
     	$em = $this->getDoctrine()->getManager();
+    	$user = $this->get('security.context')->getToken()->getUser();
     	$videogame = $em->getRepository('CPCVideoGameBundle:VideoGame')->findOneById($id);
+    	$player = $em->getRepository('CPCPlayerBundle:Player')->findOneBy(array(
+    		'user' => $user->getId(),
+    		'videogame' => $id
+    	));
+
+        if($teamid != null)
+        {
+            $team = $em->getRepository('CPCTeamBundle:Team')->findOneById($teamid);
+            $games = $em->getRepository('CPCGameBundle:Game')->findOrdered($team);
+            $ranking = $em->getRepository('CPCRankingBundle:Ranking')->findByTeam($team);
+
+            return $this->render('CPCTeamBundle:Default:index.html.twig', array(
+                'team' => $team,
+                'videogame' => $videogame,
+                'ranking' => $ranking,
+                'games' => $games
+            ));
+        }
+
+    	if($player == null)
+    	{
+	        return $this->redirectToRoute('cpc_team_createplayer', array(
+                'id' => $videogame->getId(),
+            ));
+    	}
+
+    	$team = $player->getTeam();
+
+        if($team == null)
+        {
+            return $this->redirectToRoute('cpc_team_createteam', array(
+                'id' => $videogame->getId(),
+            ));
+		}
+
+    	$games = $em->getRepository('CPCGameBundle:Game')->findOrdered($team);
+    	$ranking = $em->getRepository('CPCRankingBundle:Ranking')->findByTeam($team);
+
+        return $this->render('CPCTeamBundle:Default:index.html.twig', array(
+        	'player' => $player,
+        	'videogame' => $videogame,
+        	'ranking' => $ranking,
+        	'games' => $games,
+        ));
+    }
+
+    public function playerAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+        $videogame = $em->getRepository('CPCVideoGameBundle:VideoGame')->findOneById($id);
+        $player = $em->getRepository('CPCPlayerBundle:Player')->findOneBy(array(
+            'user' => $user->getId(),
+            'videogame' => $id
+        ));
+
+        if($player != null)
+        {
+            return $this->redirectToRoute('cpc_team_homepage', array(
+                'id' => $videogame->getId()
+            ));
+        }
+
+        $player = new Player();
+        $form = $this->createForm(new PlayerType($em), $player);
+
+        if($request->isMethod('POST'))
+        {
+            $form->handleRequest($request);
+
+            if(! $form->isValid())
+            {
+                return $this->redirectToRoute('cpc_team_homepage', array(
+                    'id' => $videogame->getId()
+                ));
+            }
+
+            $player->setUser($user);
+            $player->setVideoGame($videogame);
+
+            if($this->getRequest()->request->get('submit') == 'team')
+            {
+                $player->setTeam(null);
+                $em->persist($player);
+                $em->flush();
+            }
+
+            $em->persist($player);
+            $em->flush();
+
+            return $this->redirectToRoute('cpc_team_homepage', array(
+                'id' => $videogame->getId()
+            ));
+        }
+
+        return $this->render('CPCTeamBundle:Default:create_player.html.twig', array(
+            'videogame' => $videogame,
+            'form' => $form->createView(),
+        ));
+    }
+
+    public function teamAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+        $videogame = $em->getRepository('CPCVideoGameBundle:VideoGame')->findOneById($id);
+        $player = $em->getRepository('CPCPlayerBundle:Player')->findOneBy(array(
+            'user' => $user->getId(),
+            'videogame' => $id
+        ));
+
+        if($player == null)
+        {
+            return $this->redirectToRoute('cpc_team_homepage', array(
+                'id' => $videogame->getId()
+            ));
+        }
+
+        $team = $player->getTeam();
+
+        if($team != null)
+        {
+            return $this->redirectToRoute('cpc_team_homepage', array(
+                'id' => $videogame->getId()
+            ));
+        }
+
+        $teams = $em->getRepository('CPCTeamBundle:Team')->findAll();
+
+        if($request->isMethod('POST'))
+        {
+            if($this->getRequest()->request->get('submit') == 'new')
+            {
+                $team = new Team();
+                $team->setVideoGame($videogame);
+                $team->setCurrentscore(1200);
+                $team->setName($this->getRequest()->request->get('new'));
+                $em->persist($team);
+                $player->setTeam($team);
+            }
+            elseif($this->getRequest()->request->get('submit') == 'exist')
+            {
+                $team = $em->getRepository('CPCTeamBundle:Team')->findOneById($this->getRequest()->request->get('team'));
+                $player->setTeam($team);
+            }
+
+            $em->persist($player);
+            $em->flush();
+
+            $games = $em->getRepository('CPCGameBundle:Game')->findOrdered($team);
+            $ranking = $em->getRepository('CPCRankingBundle:Ranking')->findByTeam($team);
+
+            return $this->redirectToRoute('cpc_team_homepage', array(
+                'id' => $videogame->getId()
+            ));
+        }
+
+        return $this->render('CPCTeamBundle:Default:create_team.html.twig', array(
+            'videogame' => $videogame,
+            'teams' => $teams
+        ));
+    }
+
+    public function validAction($id, $game)
+    {
+        $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
         $player = $em->getRepository('CPCPlayerBundle:Player')->findOneBy(array(
     		'user' => $user->getId(),
     		'videogame' => $id
     	));
+        $team = $player->getTeam();
+    	$games = $em->getRepository('CPCGameBundle:Game')->findOrdered($team);
+    	$ranking = $em->getRepository('CPCRankingBundle:Ranking')->findByTeam($team);
+        $ranking1 = new Ranking();
+        $ranking2 = new Ranking();
+        $videogame = $em->getRepository('CPCVideoGameBundle:VideoGame')->findOneById($id);
+        $game = $em->getRepository('CPCGameBundle:Game')->findOneById($game);
+        $team2 = $em->getRepository('CPCPlayerBundle:Player')->findOneBy(array(
+            'user' => $user->getId(),
+            'videogame' => $id
+        ))->getTeam();
 
-    	if($player == null)
-    	{
-    		$player = new Player();
-        	$form = $this->createForm(new PlayerType($em), $player);
+    	if($game == null)
+        {
+            return $this->render('CPCTeamBundle:Default:index.html.twig', array(
+        		'player' => $player,
+        		'games' => $games,
+        		'ranking' => $ranking,
+        		'videogame' => $videogame,
+            	'error' => 'Ce match est introuvable.'
+        	));
+        }
 
-	    	if($request->isMethod('POST'))
-	        {
-	            $form->handleRequest($request);
+        if($team2 != $game->getTeam2())
+        {
+            return $this->render('CPCTeamBundle:Default:index.html.twig', array(
+        		'player' => $player,
+        		'games' => $games,
+        		'ranking' => $ranking,
+        		'videogame' => $videogame,
+            	'error' => 'Vous ne pouvez pas valider ce match.'
+        	));
+        }
 
-	            if(! $form->isValid())
-	            {
-	                return $this->render('CPCGameBundle:Default:create.html.twig', array(
-	                    'error' => $form->getErrorsAsString()
-	                ));
-	            }
+        if($game->getIsValid() == 1)
+        {
+            return $this->render('CPCTeamBundle:Default:index.html.twig', array(
+        		'player' => $player,
+        		'games' => $games,
+        		'ranking' => $ranking,
+        		'videogame' => $videogame,
+            	'error' => 'Ce match a déjà été validé.'
+        	));
+        }
 
-	            $player->setUser($user);
-	            $player->setVideoGame($videogame);
-	            $em->persist($player);
-	            $em->flush();
+        $teamA = $game->getTeam1();
+        $teamB = $game->getTeam2();
 
-	            if($this->getRequest()->request->get('submit') == 'team')
-	            {
-	            	$player->setTeam(null);
-	            	$em->persist($player);
-					$em->flush();
-					$team = $player->getTeam();
-    				$games = $em->getRepository('CPCVideoGameBundle:VideoGame')->findByTeam1($team);
-    				$ranking = $em->getRepository('CPCRankingBundle:Ranking')->findByTeam($team);
+        if(abs($teamB->getCurrentScore()-$teamA->getCurrentScore()) > 400)
+        {
+        	if($teamB->getCurrentScore() > $teamA->getCurrentScore())
+        	{
+        		$eloA = 1/(1+pow(10,1));
+        		$eloB = 1/(1+pow(10,-1));
+        	}
+        	else
+        	{
+        		$eloA = 1/(1+pow(10,-1));
+        		$eloB = 1/(1+pow(10,1));
+        	}
+        }
+        else
+        {
+        	$eloA = 1/(1+pow(10,($teamB->getCurrentScore()-$teamA->getCurrentScore())/400));
+        	$eloB = 1/(1+pow(10,($teamA->getCurrentScore()-$teamB->getCurrentScore())/400));
+        }
 
-	            	return $this->render('CPCGameBundle:Default:index.html.twig', array(
-	            		'player' => $player,
-	            		'games' => $games,
-	            		'ranking' => $ranking,
-	            		'videogame' => $videogame,
-	                	'success' => 'Ton profil a bien été créé, deviens maintenant le meilleur dresseur, et bats-toi sans répit.'
-	            	));
-	            }
+        $ranking1->setGame($game);
+        $ranking1->setTeam($teamA);
+        $ranking2->setGame($game);
+        $ranking2->setTeam($teamB);
 
-	            return $this->render('CPCPlayerBundle:Default:index.html.twig', array(
-        			'videogame' => $videogame,
-        			'success' => 'Ton profil a bien été créé, deviens maintenant le meilleur dresseur, et bats-toi sans répit.'
-       		 	));
-	        }
+        if($game->getWinningTeam() == 0)
+        {
+        	$neweloteam1 = $teamA->getCurrentScore() + 35*(1 - $eloA);
+        	$neweloteam2 = $teamB->getCurrentScore() - 35*($eloB);
+        }
+        else
+        {
+            $neweloteam1 = $teamA->getCurrentScore() - 35*($eloA);
+        	$neweloteam2 = $teamB->getCurrentScore() + 35*(1 - $eloB);
+        }
 
-	        return $this->render('CPCPlayerBundle:Default:create.html.twig', array(
-	            'videogame' => $videogame,
-	            'form' => $form->createView(),
-	        ));
-    	}
+        $ranking1->setScoreEvolution(round($neweloteam1, 0, PHP_ROUND_HALF_UP)-$teamA->getCurrentScore());
+        $ranking2->setScoreEvolution(round($neweloteam2, 0, PHP_ROUND_HALF_UP)-$teamB->getCurrentScore());
+        $teamA->setCurrentScore(round($neweloteam1, 0, PHP_ROUND_HALF_UP));
+        $teamB->setCurrentScore(round($neweloteam2, 0, PHP_ROUND_HALF_UP));
+        $game->setIsValid(1);
 
-    	$team = $player->getTeam();
-    	$form = $this->createForm(new TeamType($em), $team);
+        $em->persist($ranking1);
+        $em->persist($ranking2);
+        $em->persist($teamA);
+        $em->persist($teamB);
+        $em->persist($game);
+        $em->flush();
 
-    	if($team == null)
-    	{
-    		$team = new Team();
-
-			if($request->isMethod('POST'))
-		    {
-		        $form->handleRequest($request);
-
-		        if(! $form->isValid())
-		        {
-		            return $this->render('CPCGameBundle:Default:index.html.twig', array(
-		                'error' => $form->getErrorsAsString()
-		            ));
-		        }
-
-		        $team->setCurrentscore(1200);
-		        $team->setVideoGame($videogame);
-		        $player->setTeam($team);
-		        $em->persist($team);
-		        $em->flush();
-
-		        return $this->render('CPCTeamBundle:Default:index.html.twig', array(
-		        	'videogame' => $videogame,
-		        	'success' => 'Ton équipe a bien été créée.',
-		        	'form' => $form->createView(),
-		        ));
-		    }
-		}
-
-        return $this->render('CPCTeamBundle:Default:index.html.twig', array(
-        	'videogame' => $videogame,
-        	'form' => $form->createView(),
-        	'team' => $team
+        return $this->redirectToRoute('cpc_team_homepage', array(
+            'id' => $videogame->getId()
         ));
     }
 
-    public function createAction($id)
+    public function deleteAction($id, $game)
     {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+        $player = $em->getRepository('CPCPlayerBundle:Player')->findOneBy(array(
+            'user' => $user->getId(),
+            'videogame' => $id
+        ));
+        $team = $player->getTeam();
+        $games = $em->getRepository('CPCGameBundle:Game')->findOrdered($team);
+        $videogame = $em->getRepository('CPCVideoGameBundle:VideoGame')->findOneById($id);
+        $game = $em->getRepository('CPCGameBundle:Game')->findOneById($game);
+        $team2 = $em->getRepository('CPCPlayerBundle:Player')->findOneBy(array(
+            'user' => $user->getId(),
+            'videogame' => $id
+        ))->getTeam();
 
+        if($game == null)
+        {
+            return $this->render('CPCTeamBundle:Default:index.html.twig', array(
+                'player' => $player,
+                'games' => $games,
+                'ranking' => $ranking,
+                'videogame' => $videogame,
+                'error' => 'Ce match est introuvable.'
+            ));
+        }
+
+        if($team2 != $game->getTeam2())
+        {
+            return $this->render('CPCTeamBundle:Default:index.html.twig', array(
+                'player' => $player,
+                'games' => $games,
+                'ranking' => $ranking,
+                'videogame' => $videogame,
+                'error' => 'Vous ne pouvez pas supprimer ce match.'
+            ));
+        }
+
+        if($game->getIsValid() == 1)
+        {
+            return $this->render('CPCTeamBundle:Default:index.html.twig', array(
+                'player' => $player,
+                'games' => $games,
+                'ranking' => $ranking,
+                'videogame' => $videogame,
+                'error' => 'Ce match a été validé, il ne peut pas être supprimé.'
+            ));
+        }
+
+        $em->remove($game);
+        $em->flush();
+
+        return $this->redirectToRoute('cpc_team_homepage', array(
+            'id' => $videogame->getId()
+        ));
     }
 }

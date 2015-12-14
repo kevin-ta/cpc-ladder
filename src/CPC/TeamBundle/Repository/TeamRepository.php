@@ -14,4 +14,9 @@ class TeamRepository extends \Doctrine\ORM\EntityRepository
 	{
 		return $this->findBy(array('videogame' => $id), array('currentScore' => 'DESC'));
 	}
+
+	public function findAll()
+    {
+        return $this->findBy(array(), array('name' => 'ASC'));
+    }
 }

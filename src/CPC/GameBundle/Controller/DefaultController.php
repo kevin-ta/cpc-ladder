@@ -23,7 +23,7 @@ class DefaultController extends Controller
         ));
         if($team == null)
         {
-            return $this->redirectToRoute('cpc_team_create', array(
+            return $this->redirectToRoute('cpc_team_createteam', array(
                 'id' => $videogame->getId()
             ));
         }
