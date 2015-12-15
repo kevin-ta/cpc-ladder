@@ -51,7 +51,9 @@
                         {% elseif i.winningteam == 0 and player.team.id == i.team1.id and i.isValid == 1 %}
                             {% set win = win + 1 %}
                         {% else %}
-                            {% set lose = lose + 1 %}
+                            {% if i.isValid == 1 %}
+                                {% set lose = lose + 1 %}
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
                     {{ win }} victoire{% if win > 1 %}s{% endif %} et {{ lose }} défaite{% if lose > 1 %}s{% endif %}
@@ -77,12 +79,20 @@
                         {% elseif i.winningteam == 0 and team.id == i.team1.id and i.isValid == 1 %}
                             {% set win = win + 1 %}
                         {% else %}
-                            {% set lose = lose + 1 %}
+                            {% if i.isValid == 1 %}
+                                {% set lose = lose + 1 %}
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
                     {{ win }} victoire{% if win > 1 %}s{% endif %} et {{ lose }} défaite{% if lose > 1 %}s{% endif %}
                 </h4>
-                <h4>Ratio W/L : {{ (win/lose)|round(2, 'common') }}</h4>
+                <h4>Ratio W/L : 
+                    {% if lose != 0 %}
+                        {{ (win/lose)|round(2, 'common') }}
+                    {% else %}
+                        0
+                    {% endif %}
+                </h4>
                 <br><br>
             </div>
         {% else %}
@@ -192,6 +202,8 @@
                             {% endif %}
                             {% if i.isvalid == 1 %}
                                 <td colspan="2"><i class="fa fa-check-square-o fa-lg"></i> OK</td>
+                            {% else %}
+                                <td colspan="2">En attente</td>
                             {% endif %}
                         </tr>
                     {% endfor %}

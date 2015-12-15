@@ -4,18 +4,18 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>CPC Ladder {% block title %}{% endblock %}</title>
-        <link href="{{ asset('//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css') }}" rel="stylesheet">
         <link href="{{ asset('//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css') }}" rel="stylesheet" >
         <link href="{{ asset('css/app.css') }}" rel="stylesheet" >
         {% block stylesheets %}
         {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-        <link href='{{ asset('//fonts.googleapis.com/css?family=Roboto') }}' rel='stylesheet' type='text/css'>
+        <link href="{{ asset('//fonts.googleapis.com/css?family=Open+Sans') }}" rel='stylesheet' type='text/css'>
     </head>
     <body>
         {% block navbar %}
             <nav class="navbar navbar-default navbar-fixed-top">
-                <div class="container-fluid">
+                <div class="container">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                             <span class="sr-only">Toggle navigation</span>
@@ -23,17 +23,16 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="{{ path('cpc_video_game_index', {id:videogame.id}) }}">CPC Ladder</a>
+                        <a class="navbar-brand" href="{{ path('cpc_video_game_index', {id:videogame.id}) }}"><span style="color:#e74c3c;">CPC</span> Ladder</a>
                     </div>
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            <li><a href="{{ path('cpc_ranking_homepage', {id:videogame.id}) }}"><i class="fa fa-trophy fa-fw"></i> Classement</a></li>
-                            <li><a href="{{ path('cpc_game_homepage', {id:videogame.id}) }}"><i class="fa fa-plus fa-fw"></i> Nouveau match</a></li>
-                            <li><a href="{{ path('cpc_team_homepage', {id:videogame.id}) }}"><i class="fa fa-gamepad fa-fw"></i> Equipe</a></li>
-                        </ul>
-                        <ul class="nav navbar-nav navbar-right">
+                            <li {% if app.request.get('_route') == 'cpc_video_game_index' %}class="active"{% endif %}><a href="{{ path('cpc_video_game_index', {id:videogame.id}) }}"><i class="fa fa-home fa-fw"></i> Accueil</a></li>
+                            <li {% if app.request.get('_route') == 'cpc_ranking_homepage' %}class="active"{% endif %}><a href="{{ path('cpc_ranking_homepage', {id:videogame.id}) }}"><i class="fa fa-trophy fa-fw"></i> Classement</a></li>
+                            <li {% if app.request.get('_route') == 'cpc_game_homepage' %}class="active"{% endif %}><a href="{{ path('cpc_game_homepage', {id:videogame.id}) }}"><i class="fa fa-plus fa-fw"></i> Nouveau match</a></li>
+                            <li {% if app.request.get('_route') == 'cpc_team_homepage' %}class="active"{% endif %}><a href="{{ path('cpc_team_homepage', {id:videogame.id}) }}"><i class="fa fa-gamepad fa-fw"></i> Equipe</a></li>
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user fa-fw"></i> Mon profil <span class="caret"></span></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user fa-fw"></i> Mon profil <i class="fa fa-angle-down"></i></a>
                                 <ul class="dropdown-menu">
                                     {% if app.user is null %}
                                         <li><a href="{{ path('fos_user_registration_register') }}"> Inscription</a></li>
@@ -44,19 +43,33 @@
                                         <li><a href="{{ path('fos_user_security_logout') }}">Deconnexion</a></li>
                                     {% endif %}
                                 </ul>
-                              </li>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
                             <li><a href="{{ path('cpc_video_game_homepage') }}"><i class="fa fa-undo"></i> Liste des jeux</a></li>
                         </ul>
                     </div>
                 </div>
             </nav>
         {% endblock %}
-        <div class="container" style="padding-top:60px">
+        <div class="container" style="padding-top:120px">
             <div class="row">
                 {% block body %}
                 {% endblock %}
             </div>
         </div>
+        {% block footer %}
+            <footer class="footer">
+                <div class="container">
+                    <div class="col-md-6 col-md-offset-3 text-center">
+                        <h4 style="font-weight:100;">Ladder très hype du <span style="color:#e74c3c;">Club PC</span></h4>
+                    </div>
+                    <div class="col-md-6 col-md-offset-3 text-center">
+                        <a href="#"><i class="fa fa-twitter fa-lg fa-fw"></i></a> <a href="#"><i class="fa fa-facebook fa-lg fa-fw"></i></a> <a href="#"><i class="fa fa-youtube fa-lg fa-fw"></i></a> <a href="#"><i class="fa fa-envelope fa-lg fa-fw"></i></a>
+                    </div>
+                </div>
+            </footer>
+        {% endblock %}
         <script src="{{ asset('//code.jquery.com/jquery-2.1.4.min.js') }}"></script>
         <script src="{{ asset('//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js') }}"></script>
         {% block javascripts %}
