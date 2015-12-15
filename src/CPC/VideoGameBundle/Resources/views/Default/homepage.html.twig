@@ -3,15 +3,20 @@
 {% block navbar %}{% endblock %}
 
 {% block body %}
+	<div class="col-md-12 text-center" style="color:white;position:relative;z-index:2;font-family:'Roboto Slab',serif;">
+		<h1 style="font-size:44px;font-family:"Open Sans",sans-serif;">Le ladder le plus hype du Club PC</h1><br>
+		<h4>Choisissez un jeu</h4><br>
+	</div>
+	<div class="col-md-12 text-center" style="color:white;font-size:44px;position:relative;z-index:2;">
+		{% for videogame in videogames %}
+			<a href="{{ path('cpc_video_game_index', {id:videogame.id}) }}" style="text-decoration:none;color: #0ABDD7;">{{ videogame.name }}</a><br>
+		{% endfor %}
+	</div>
+	<div class="body-bg"></div>
 	<video autoplay loop poster="{{ asset('vid/clubpc.jpg') }}" id="bgvid">
 		<source src="{{ asset('vid/clubpc.mp4') }}" type="video/mp4">
     	<source src="{{ asset('vid/clubpc.webm') }}" type="video/webm">
 	</video>
-	<div class="col-md-12">
-		{% for videogame in videogames %}
-			<a href="{{ path('cpc_video_game_index', {id:videogame.id}) }}">{{ videogame.name }}</a><br>
-		{% endfor %}
-	</div>
 {% endblock %}
 
 {% block footer %}{% endblock %}

@@ -9,8 +9,18 @@ video#bgvid {
     z-index: -100;
     -webkit-transform: translateX(-50%) translateY(-50%);
     transform: translateX(-50%) translateY(-50%);
-    background: url(hflan.jpg) no-repeat;
+    background: url('../vid/clubpc.jpg') no-repeat;
     background-size: cover; 
+}
+
+.body-bg {
+    background: rgba(0, 0, 0, 0.5) url('../overlay.png') repeat scroll 0% 0%;
+    height: 100%;
+    left: 0px;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 1;
 }
 
 body {
@@ -54,12 +64,12 @@ nav {
 .navbar-default .navbar-nav > .open > a:hover,
 .navbar-default .navbar-nav > .open > a:focus {
     color: #ffffff;
-    background-color: #e74c3c;
+    background-color: #0abdd7;
     border-radius: 5px;
 }
 
 .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
-    background-color: #e74c3c;
+    background-color: #0abdd7;
     color: #ffffff;
 }
 
@@ -79,7 +89,7 @@ nav {
 }
 
 .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
-    background-color: #e74c3c;
+    background-color: #0abdd7;
     border-radius: 5px;
 }
 
