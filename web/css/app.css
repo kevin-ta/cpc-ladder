@@ -73,6 +73,11 @@ nav {
     color: #ffffff;
 }
 
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
+    background-color: #0abdd7;
+    color: #ffffff !important;
+}
+
 
 .navbar-nav > li > .dropdown-menu {
   margin-top: 3px;
