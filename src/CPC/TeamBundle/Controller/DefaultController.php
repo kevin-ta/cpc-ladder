@@ -82,7 +82,7 @@ class DefaultController extends Controller
         }
 
         $player = new Player();
-        $form = $this->createForm(new PlayerType($em), $player);
+        $form = $this->createForm(new PlayerType($videogame), $player);
 
         if($request->isMethod('POST'))
         {
