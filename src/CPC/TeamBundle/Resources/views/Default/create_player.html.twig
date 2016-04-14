@@ -13,18 +13,25 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12">
-                <div class="form-group">
-                    {{ form_label(form.team, label|default(null), {'label_attr': {'class':'col-md-2 col-md-offset-2 control-label'}}) }}
-                    <div class="col-md-6">
-                        {{ form_widget(form.team, {'attr': {'class': 'form-control'}}) }}
+            {% if videogame.issolo == false %}
+                <div class="col-md-12">
+                    <div class="form-group">
+                        {{ form_label(form.team, label|default(null), {'label_attr': {'class':'col-md-2 col-md-offset-2 control-label'}}) }}
+                        <div class="col-md-6">
+                            {{ form_widget(form.team, {'attr': {'class': 'form-control'}}) }}
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
             <div class="col-md-6 col-md-offset-3">
-                <br><p>Si tu souhaites créer ta propre équipe, clique sur <b>Créer mon équipe</b>.<br>Sinon, tu peux temporiser en envoyant le form sans sélectionner d'équipe.</p><br>
+                <br>
+                {% if videogame.issolo == false %}
+                <p>Si tu souhaites créer ta propre équipe, clique sur <b>Créer mon équipe</b>.<br>Sinon, tu peux temporiser en envoyant le form sans sélectionner d'équipe.</p><br>
+                {% endif %}
                 <button type="submit" class="btn btn-success" value="no_team" id="send" name="submit">Envoyer</button>
+                {% if videogame.issolo == false %}
                 <button type="submit" class="btn btn-primary" value="team" id="send" name="submit">Créer mon équipe</button>
+                {% endif %}
             </div>
         </form>
     </div>

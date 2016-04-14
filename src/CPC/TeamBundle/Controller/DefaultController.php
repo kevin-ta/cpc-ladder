@@ -46,7 +46,7 @@ class DefaultController extends Controller
 
     	$team = $player->getTeam();
 
-        if($team == null)
+        if($team == null && $videogame->getIsSolo() == false)
         {
             return $this->redirectToRoute('cpc_team_createteam', array(
                 'id' => $videogame->getId(),
@@ -98,11 +98,16 @@ class DefaultController extends Controller
             $player->setUser($user);
             $player->setVideoGame($videogame);
 
-            if($this->getRequest()->request->get('submit') == 'team')
+            if($this->getRequest()->request->get('submit') == 'team') $player->setTeam(null);
+
+            if($videogame->getIsSolo() == true)
             {
-                $player->setTeam(null);
-                $em->persist($player);
-                $em->flush();
+                $team = new Team();
+                $team->setVideoGame($videogame);
+                $team->setCurrentscore(1200);
+                $team->setName($player->getNickname());
+                $em->persist($team);
+                $player->setTeam($team);
             }
 
             $em->persist($player);
