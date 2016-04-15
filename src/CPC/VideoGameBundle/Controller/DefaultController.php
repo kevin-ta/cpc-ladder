@@ -18,9 +18,11 @@ class DefaultController extends Controller
     public function indexAction($id)
     {
     	$em = $this->getDoctrine()->getManager();
+        $first = $em->getRepository('CPCTeamBundle:Team')->findOrdered($id);
     	$videogame = $em->getRepository('CPCVideoGameBundle:VideoGame')->findOneById($id);
         return $this->render('CPCVideoGameBundle:Default:index.html.twig', array(
-        	'videogame' => $videogame
+        	'videogame' => $videogame,
+            'first' => $first
         ));
     }
 }

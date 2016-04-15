@@ -3,6 +3,20 @@
 {% block title %}- {{ videogame.name }}{% endblock %}
 
 {% block body %}
-	<div class="col-md-12">
-	</div>
+    <div class="col-md-12 text-center">
+        <img src="{{ asset(videogame.banner) }}"></br></br>
+    </div>
+    <div class="col-md-12 text-center"> 
+        {% if videogame.issolo == true %}
+        <h3>
+            Le champion actuel de {{ videogame.name }} est :<br><br>
+            <a href="{{ path('cpc_team_homepage', {id:videogame.id, teamid:first[0].id}) }}">{{ first[0].name }}</a> avec {{ first[0].currentScore }} elo
+        </h3>
+        {% else %}
+        <h3>
+            L'équipe championne actuelle de {{ videogame.name }} est :<br><br>
+            <a href="{{ path('cpc_team_homepage', {id:videogame.id, teamid:first[0].id}) }}">{{ first[0].name }}</a> avec {{ first[0].currentScore }} elo<br>
+        </h3>
+        {% endif %}
+    </div>
 {% endblock %}
